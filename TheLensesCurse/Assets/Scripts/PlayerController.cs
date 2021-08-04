@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxSpeed = 50.0f;
     [SerializeField] Transform CameraTransform = null;
 
+    [SerializeField] GameManager gm = null;
+
     private void Start()
     {
         Cursor.visible = false;    
@@ -16,30 +18,33 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (!gm.isPaused)
         {
-            rb.AddRelativeForce(speed * Vector3.forward);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            rb.AddRelativeForce(speed * Vector3.back);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            rb.AddRelativeForce(speed * Vector3.left);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            rb.AddRelativeForce(speed * Vector3.right);
-        }
+            if (Input.GetKey(KeyCode.W))
+            {
+                rb.AddRelativeForce((speed * Vector3.forward) * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                rb.AddRelativeForce((speed * Vector3.back) * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                rb.AddRelativeForce((speed * Vector3.left) * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                rb.AddRelativeForce((speed * Vector3.right) * Time.deltaTime);
+            }
 
-        if(rb.velocity.magnitude > maxSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            if(rb.velocity.magnitude > maxSpeed)
+            {
+                rb.velocity = rb.velocity.normalized * maxSpeed;
+            }
+
+
+            transform.Rotate(Vector3.up * Input.GetAxis("Mouse X"));
+            CameraTransform.Rotate(Vector3.left * Input.GetAxis("Mouse Y"));
         }
-
-
-        transform.Rotate(Vector3.up * Input.GetAxis("Mouse X"));
-        CameraTransform.Rotate(Vector3.left * Input.GetAxis("Mouse Y"));
     }
 }
